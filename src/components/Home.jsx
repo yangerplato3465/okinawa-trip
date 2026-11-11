@@ -50,6 +50,7 @@ export default function Home() {
         </section>
       )}
       <p className="fine">提醒：知道連結的人都能編輯，請只分享給一起旅行的人。</p>
+      <footer className="app-version">v{__APP_VERSION__}</footer>
     </div>
   )
 }

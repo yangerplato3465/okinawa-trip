@@ -108,3 +108,26 @@ export const restore = (entryId) => (trip) => {
   }
   day.items.splice(Math.min(entry.index, day.items.length), 0, entry.item)
 }
+
+// ---------- packing list ("要帶的東西") ----------
+
+export const addPacking = (item) => (trip) => {
+  trip.packing = trip.packing || []
+  if (!trip.packing.some((p) => p.id === item.id)) trip.packing.push(item)
+}
+
+export const updatePacking = (id, patch) => (trip) => {
+  const item = (trip.packing || []).find((p) => p.id === id)
+  if (item) Object.assign(item, patch)
+}
+
+export const deletePacking = (id) => (trip) => {
+  trip.packing = (trip.packing || []).filter((p) => p.id !== id)
+}
+
+export const restorePacking = (item, index) => (trip) => {
+  trip.packing = trip.packing || []
+  if (!trip.packing.some((p) => p.id === item.id)) {
+    trip.packing.splice(Math.min(index, trip.packing.length), 0, item)
+  }
+}

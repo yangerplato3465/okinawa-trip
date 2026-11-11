@@ -23,3 +23,7 @@ export const BedIcon = () => (
   <Svg size={18}><path d="M3 18V6M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5" /><circle cx="7" cy="11" r="2" /></Svg>
 )
 export const UndoIcon = () => <Svg size={16}><path d="M9 14 4 9l5-5" /><path d="M4 9h10a6 6 0 0 1 0 12h-3" /></Svg>
+export const BagIcon = () => (
+  <Svg><rect x="4" y="7" width="16" height="13" rx="2" /><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M4 12h16" /></Svg>
+)
+export const CloseIcon = () => <Svg><path d="M6 6l12 12M18 6 6 18" /></Svg>

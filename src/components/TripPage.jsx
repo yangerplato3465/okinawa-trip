@@ -7,13 +7,15 @@ import { rememberTrip } from '../lib/recent'
 import { isDemoMode } from '../lib/store'
 import { useTrip } from '../lib/useTrip'
 import DayCard from './DayCard'
-import { PlusIcon, ShareIcon, UndoIcon } from './Icons'
+import { BagIcon, PlusIcon, ShareIcon, UndoIcon } from './Icons'
 import InlineText from './InlineText'
+import PackingDialog from './PackingDialog'
 
 export default function TripPage({ tripId }) {
   const { trip, error, mutate, saving } = useTrip(tripId)
   const [editing, setEditing] = useState(null) // item id, or `new:<dayId>`
   const [toast, setToast] = useState(null)
+  const [packingOpen, setPackingOpen] = useState(false)
   const toastTimer = useRef()
 
   function showToast(message, action) {
@@ -83,6 +85,13 @@ export default function TripPage({ tripId }) {
   }
 
   const trash = trip.trash || []
+  const packing = trip.packing || []
+  const packingActions = {
+    add: (text) => run(ops.addPacking({ id: randomId(), text })),
+    update: (id, patch) => run(ops.updatePacking(id, patch)),
+    remove: (id) => run(ops.deletePacking(id)),
+    restore: (item, index) => run(ops.restorePacking(item, index)),
+  }
 
   return (
     <div className="page">
@@ -115,9 +124,15 @@ export default function TripPage({ tripId }) {
               onChange={(e) => e.target.value && run(ops.setStartDate(e.target.value))}
             />
           </label>
-          <button className="btn primary" onClick={share}>
-            <ShareIcon /> 分享連結
-          </button>
+          <div className="toolbar-actions">
+            <button className="btn" onClick={() => setPackingOpen(true)}>
+              <BagIcon /> 要帶的東西
+              {packing.length > 0 && <span className="count">{packing.length}</span>}
+            </button>
+            <button className="btn primary" onClick={share}>
+              <ShareIcon /> 分享連結
+            </button>
+          </div>
         </div>
         <p className="hint">
           點行程可以編輯；按住行程拖曳就能換到別天。按住日期左邊的 <span className="hint-grip">⠿</span>{' '}
@@ -170,6 +185,15 @@ export default function TripPage({ tripId }) {
           </ul>
         </details>
       )}
+
+      <footer className="app-version">v{__APP_VERSION__}</footer>
+
+      <PackingDialog
+        open={packingOpen}
+        onClose={() => setPackingOpen(false)}
+        items={packing}
+        actions={packingActions}
+      />
 
       {toast && (
         <div className="toast" role="status">

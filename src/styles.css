@@ -149,6 +149,16 @@ h1 { margin: 4px 0 12px; font-size: 28px; line-height: 1.25; }
 .start-date { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
 .start-date .field { width: auto; color: var(--ink); }
 
+.toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn .count {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  background: var(--sea-soft);
+  color: var(--sea);
+  border-radius: 99px;
+  padding: 0 7px;
+}
+
 .hint { color: var(--muted); font-size: 14px; margin: 12px 0 0; }
 .hint-grip { font-weight: 700; }
 
@@ -388,6 +398,85 @@ h1 { margin: 4px 0 12px; font-size: 28px; line-height: 1.25; }
   font-weight: 700;
   cursor: pointer;
   flex: none;
+}
+
+/* ---------- packing popup ---------- */
+body:has(dialog[open]) { overflow: hidden; }
+
+.sheet {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  width: min(480px, calc(100% - 32px));
+  max-width: none;
+  max-height: min(640px, 85vh);
+  overflow: visible;
+}
+.sheet::backdrop { background: rgba(10, 20, 24, 0.5); }
+
+.sheet-inner {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lift);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: min(640px, 85vh);
+}
+
+.sheet-head { display: flex; align-items: center; gap: 10px; }
+.sheet-head h2 { margin: 0; font-size: 20px; }
+.sheet-head .icon-btn { margin-left: auto; }
+.sheet-head .icon-btn:hover { color: var(--ink); }
+
+.packing-add { display: flex; gap: 8px; }
+.packing-add .btn { flex: none; }
+
+.packing-empty { color: var(--muted); font-size: 14px; margin: 4px 0; }
+
+.packing-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+}
+.packing-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 4px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.packing-list li:last-child { border-bottom: 0; }
+.packing-list .bullet { width: 6px; height: 6px; border-radius: 50%; background: var(--sea); flex: none; margin: 0 4px 0 6px; }
+.packing-text { margin-left: 0; }
+.packing-list .icon-btn { width: 32px; height: 32px; }
+
+.packing-undo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--card-sunk);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.packing-undo button { border: 0; background: none; color: var(--sea); font-weight: 700; cursor: pointer; }
+
+.sheet .fine { margin: 0; }
+
+.app-version {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- home & messages ---------- */
