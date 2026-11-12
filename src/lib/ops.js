@@ -131,3 +131,32 @@ export const restorePacking = (item, index) => (trip) => {
     trip.packing.splice(Math.min(index, trip.packing.length), 0, item)
   }
 }
+
+// ---------- per-day food shortlist ("美食備選名單") ----------
+// Lives on the day, so it travels with the day's activities when days are reordered.
+
+const foodOf = (trip, dayId) => {
+  const day = findDay(trip, dayId)
+  if (day && !day.food) day.food = []
+  return day?.food
+}
+
+export const addFood = (dayId, item) => (trip) => {
+  const food = foodOf(trip, dayId)
+  if (food && !food.some((f) => f.id === item.id)) food.push(item)
+}
+
+export const updateFood = (dayId, id, patch) => (trip) => {
+  const item = foodOf(trip, dayId)?.find((f) => f.id === id)
+  if (item) Object.assign(item, patch)
+}
+
+export const deleteFood = (dayId, id) => (trip) => {
+  const day = findDay(trip, dayId)
+  if (day) day.food = (day.food || []).filter((f) => f.id !== id)
+}
+
+export const restoreFood = (dayId, item, index) => (trip) => {
+  const food = foodOf(trip, dayId)
+  if (food && !food.some((f) => f.id === item.id)) food.splice(Math.min(index, food.length), 0, item)
+}

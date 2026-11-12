@@ -9,6 +9,7 @@ import { useTrip } from '../lib/useTrip'
 import DayCard from './DayCard'
 import { BagIcon, PlusIcon, ShareIcon, UndoIcon } from './Icons'
 import InlineText from './InlineText'
+import FoodDialog from './FoodDialog'
 import PackingDialog from './PackingDialog'
 
 export default function TripPage({ tripId }) {
@@ -16,6 +17,7 @@ export default function TripPage({ tripId }) {
   const [editing, setEditing] = useState(null) // item id, or `new:<dayId>`
   const [toast, setToast] = useState(null)
   const [packingOpen, setPackingOpen] = useState(false)
+  const [food, setFood] = useState(null) // { dayId, label } while a day's food list is open
   const toastTimer = useRef()
 
   function showToast(message, action) {
@@ -53,6 +55,7 @@ export default function TripPage({ tripId }) {
     addItem: (dayId, fields) => run(ops.addItem(dayId, { id: randomId(), ...fields })),
     updateItem: (itemId, patch) => run(ops.updateItem(itemId, patch)),
     setHotel: (dayId, hotel) => run(ops.setHotel(dayId, hotel)),
+    openFood: (dayId, label) => setFood({ dayId, label }),
     deleteItem: (item) => {
       run(ops.deleteItem(item.id, item.title))
       showToast(`已刪除「${item.title}」`, { label: '復原', fn: () => run(ops.restore(item.id)) })
@@ -91,6 +94,15 @@ export default function TripPage({ tripId }) {
     update: (id, patch) => run(ops.updatePacking(id, patch)),
     remove: (id) => run(ops.deletePacking(id)),
     restore: (item, index) => run(ops.restorePacking(item, index)),
+  }
+
+  // If the open day gets deleted by someone else, the popup just closes.
+  const foodDay = food && trip.days.find((d) => d.id === food.dayId)
+  const foodActions = food && {
+    add: (fields) => run(ops.addFood(food.dayId, { id: randomId(), ...fields })),
+    update: (id, patch) => run(ops.updateFood(food.dayId, id, patch)),
+    remove: (id) => run(ops.deleteFood(food.dayId, id)),
+    restore: (item, index) => run(ops.restoreFood(food.dayId, item, index)),
   }
 
   return (
@@ -193,6 +205,14 @@ export default function TripPage({ tripId }) {
         onClose={() => setPackingOpen(false)}
         items={packing}
         actions={packingActions}
+      />
+
+      <FoodDialog
+        open={Boolean(foodDay)}
+        onClose={() => setFood(null)}
+        dayLabel={food?.label}
+        items={foodDay?.food || []}
+        actions={foodActions || {}}
       />
 
       {toast && (

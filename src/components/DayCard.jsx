@@ -2,7 +2,7 @@ import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { dayInfo } from '../lib/dates'
 import HotelSection from './HotelSection'
 import { mapHref } from '../lib/maps'
-import { GripIcon, MapPinIcon, PlusIcon, TrashIcon } from './Icons'
+import { ChevronIcon, FoodIcon, GripIcon, MapPinIcon, PlusIcon, TrashIcon } from './Icons'
 import InlineText from './InlineText'
 import ItemForm from './ItemForm'
 
@@ -92,6 +92,8 @@ export default function DayCard({ day, index, startDate, previousHotel, editing,
             </button>
           )}
 
+          <FoodRow food={day.food || []} onOpen={() => actions.openFood(day.id, `${month}/${date}（${weekday}）`)} />
+
           <HotelSection
             hotel={day.hotel}
             previousHotel={previousHotel}
@@ -106,6 +108,21 @@ export default function DayCard({ day, index, startDate, previousHotel, editing,
         </section>
       )}
     </Draggable>
+  )
+}
+
+// The "美食備選名單" strip: shows a peek at the list and opens the popup.
+function FoodRow({ food, onOpen }) {
+  return (
+    <button className="food-row" onClick={onOpen}>
+      <FoodIcon />
+      <span className="food-row-label">美食備選名單</span>
+      {food.length > 0 && <span className="count">{food.length}</span>}
+      <span className="food-row-peek">
+        {food.length > 0 ? food.map((f) => f.name).join('、') : '還沒有，點一下新增'}
+      </span>
+      <ChevronIcon />
+    </button>
   )
 }
 
