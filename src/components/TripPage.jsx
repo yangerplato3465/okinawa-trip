@@ -88,7 +88,7 @@ export default function TripPage({ tripId }) {
   const trash = trip.trash || []
   const packing = trip.packing || []
   const packingActions = {
-    add: (text) => run(ops.addPacking({ id: randomId(), text })),
+    add: (text) => run(ops.addPacking({ id: randomId(), text, done: false })),
     update: (id, patch) => run(ops.updatePacking(id, patch)),
     remove: (id) => run(ops.deletePacking(id)),
     restore: (item, index) => run(ops.restorePacking(item, index)),
@@ -140,7 +140,11 @@ export default function TripPage({ tripId }) {
           <div className="toolbar-actions">
             <button className="btn" onClick={() => setPackingOpen(true)}>
               <BagIcon /> 要帶的東西
-              {packing.length > 0 && <span className="count">{packing.length}</span>}
+              {packing.length > 0 && (
+                <span className="count">
+                  {packing.filter((p) => p.done).length}/{packing.length}
+                </span>
+              )}
             </button>
             <button className="btn primary" onClick={share}>
               <ShareIcon /> 分享連結

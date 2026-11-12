@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { CloseIcon } from './Icons'
 import InlineText from './InlineText'
 
-// Popup with the shared "what to bring" checklist.
+// Popup with the shared "what to bring" checklist. Anyone can tick items off.
 export default function PackingDialog({ open, onClose, items, actions }) {
   const dialog = useRef()
   const [text, setText] = useState('')
@@ -63,8 +63,14 @@ export default function PackingDialog({ open, onClose, items, actions }) {
         ) : (
           <ul className="packing-list">
             {items.map((item, i) => (
-              <li key={item.id}>
-                <span className="bullet" aria-hidden="true" />
+              <li key={item.id} className={item.done ? 'is-done' : ''}>
+                <input
+                  type="checkbox"
+                  className="packing-check"
+                  checked={Boolean(item.done)}
+                  onChange={(e) => actions.update(item.id, { done: e.target.checked })}
+                  aria-label={`${item.text} 已準備好`}
+                />
                 <InlineText
                   className="packing-text"
                   value={item.text}
@@ -92,8 +98,6 @@ export default function PackingDialog({ open, onClose, items, actions }) {
             </button>
           </div>
         )}
-
-        <p className="fine">這份清單大家共用，任何人都可以新增或修改。</p>
       </div>
     </dialog>
   )

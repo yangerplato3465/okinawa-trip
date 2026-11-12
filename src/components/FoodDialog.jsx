@@ -129,8 +129,6 @@ export default function FoodDialog({ open, onClose, dayLabel, items, actions }) 
             </button>
           </div>
         )}
-
-        <p className="fine">每天各有一份，大家共用，任何人都可以新增或修改。</p>
       </div>
     </dialog>
   )
