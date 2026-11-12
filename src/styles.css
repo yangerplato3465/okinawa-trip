@@ -245,6 +245,17 @@ h1 { margin: 4px 0 12px; font-size: 28px; line-height: 1.25; }
 .item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .item-title { font-weight: 500; overflow-wrap: anywhere; }
 .item-note { color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.item-map {
+  flex: none;
+  display: flex;
+  margin: -6px 0;
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--muted);
+}
+.item-map.has-link { color: var(--sea); }
+.item-map:hover { background: var(--sea-soft); color: var(--sea); }
+.field-error { margin: -2px 0 0; font-size: 13px; }
 .item-grip { color: var(--line); flex: none; padding-top: 2px; }
 .item:hover .item-grip { color: var(--muted); }
 

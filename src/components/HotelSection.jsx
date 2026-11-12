@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { cleanMapUrl, mapHref } from '../lib/maps'
 import { BedIcon } from './Icons'
+import { MapUrlField } from './ItemForm'
 
 // The "住宿" strip at the bottom of each day.
 export default function HotelSection({ hotel, previousHotel, isEditing, onEdit, onCancel, onSave }) {
@@ -27,7 +29,7 @@ export default function HotelSection({ hotel, previousHotel, isEditing, onEdit, 
     )
   }
 
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.name)}`
+  const mapUrl = mapHref(hotel.name, hotel.mapUrl)
   return (
     <div className="hotel">
       <BedIcon />
@@ -46,10 +48,15 @@ export default function HotelSection({ hotel, previousHotel, isEditing, onEdit, 
 function HotelForm({ initial, onSave, onCancel }) {
   const [name, setName] = useState(initial?.name || '')
   const [note, setNote] = useState(initial?.note || '')
+  const [mapUrl, setMapUrl] = useState(initial?.mapUrl || '')
+  const [badLink, setBadLink] = useState(false)
 
   function submit(e) {
     e.preventDefault()
-    onSave(name.trim() ? { name: name.trim(), note: note.trim() } : null)
+    if (!name.trim()) return onSave(null)
+    const link = cleanMapUrl(mapUrl)
+    if (link === null) return setBadLink(true)
+    onSave({ name: name.trim(), note: note.trim(), mapUrl: link })
   }
 
   return (
@@ -69,6 +76,7 @@ function HotelForm({ initial, onSave, onCancel }) {
         placeholder="備註：地址、入住時間、訂房代號…"
         aria-label="住宿備註"
       />
+      <MapUrlField value={mapUrl} bad={badLink} onChange={(v) => { setMapUrl(v); setBadLink(false) }} />
       <div className="form-actions">
         {initial?.name && (
           <button type="button" className="btn danger" onClick={() => onSave(null)}>

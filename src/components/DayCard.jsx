@@ -1,7 +1,8 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 import { dayInfo } from '../lib/dates'
 import HotelSection from './HotelSection'
-import { GripIcon, PlusIcon, TrashIcon } from './Icons'
+import { mapHref } from '../lib/maps'
+import { GripIcon, MapPinIcon, PlusIcon, TrashIcon } from './Icons'
 import InlineText from './InlineText'
 import ItemForm from './ItemForm'
 
@@ -135,6 +136,20 @@ function ItemRow({ item, index, isEditing, onEdit, onCancel, onSave, onDelete })
                 </span>
                 {item.note && <span className="item-note">{item.note}</span>}
               </span>
+              {item.showMap !== false && (
+                <a
+                  className={`item-map ${item.mapUrl ? 'has-link' : ''}`}
+                  href={mapHref(item.title, item.mapUrl)}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  aria-label={`在 Google 地圖開啟 ${item.title}`}
+                  title={item.mapUrl ? '開啟地圖連結' : '在 Google 地圖搜尋'}
+                >
+                  <MapPinIcon />
+                </a>
+              )}
               <span className="item-grip" aria-hidden="true">
                 <GripIcon />
               </span>
