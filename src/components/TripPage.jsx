@@ -3,11 +3,10 @@ import { useEffect, useRef, useState } from 'react'
 import { rangeLabel } from '../lib/dates'
 import { randomId } from '../lib/ids'
 import * as ops from '../lib/ops'
-import { rememberTrip } from '../lib/recent'
 import { isDemoMode } from '../lib/store'
 import { useTrip } from '../lib/useTrip'
 import DayCard from './DayCard'
-import { BagIcon, PlusIcon, ShareIcon, UndoIcon } from './Icons'
+import { BackIcon, BagIcon, PlusIcon, ShareIcon, UndoIcon } from './Icons'
 import InlineText from './InlineText'
 import FoodDialog from './FoodDialog'
 import PackingDialog from './PackingDialog'
@@ -32,8 +31,7 @@ export default function TripPage({ tripId }) {
   useEffect(() => {
     if (!trip) return
     document.title = trip.title || '旅行計畫'
-    rememberTrip(tripId, trip.title)
-  }, [tripId, trip?.title])
+  }, [trip?.title])
 
   if (error) return <Message title="無法載入行程">請檢查網路連線，或確認連結是否完整。</Message>
   if (trip === undefined) return <Message title="載入中…" />
@@ -114,6 +112,9 @@ export default function TripPage({ tripId }) {
       )}
 
       <header className="trip-head">
+        <a className="back-link" href="/">
+          <BackIcon /> 所有行程
+        </a>
         <div className="eyebrow">
           {rangeLabel(trip.startDate, trip.days.length)} · {trip.days.length} 天
           <span className={`sync ${saving ? 'is-saving' : ''}`}>{saving ? '儲存中…' : '已同步'}</span>

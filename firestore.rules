@@ -2,15 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Each trip is one document at /trips/{tripId}.
-    // The long random tripId in the share link acts as the password:
-    // you can open or edit a trip only if you know its exact ID.
+    // The trip list is public: anyone who opens the site can see and edit every trip.
     match /trips/{tripId} {
-      allow get: if tripId.size() >= 20;
+      allow get, list: if true;
       allow create, update: if tripId.size() >= 20
         && request.resource.data.title is string
         && request.resource.data.days is list;
-      // Nobody can list all trips (that would reveal every link) or delete one.
-      allow list, delete: if false;
+      // Nobody can delete a whole trip from the database.
+      allow delete: if false;
     }
   }
 }

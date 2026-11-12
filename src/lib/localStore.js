@@ -15,13 +15,17 @@ function read(id) {
 
 function write(id, data) {
   localStorage.setItem(key(id), JSON.stringify(data))
-  setTimeout(() => listeners.get(id)?.forEach((fn) => fn(read(id))), 0)
+  setTimeout(() => {
+    listeners.get(id)?.forEach((fn) => fn(read(id)))
+    listListeners.forEach((fn) => fn(readAll()))
+  }, 0)
 }
 
 window.addEventListener('storage', (e) => {
   if (!e.key?.startsWith('trip:')) return
   const id = e.key.slice(5)
   listeners.get(id)?.forEach((fn) => fn(read(id)))
+  listListeners.forEach((fn) => fn(readAll()))
 })
 
 export function subscribeTrip(id, onData) {
@@ -29,6 +33,26 @@ export function subscribeTrip(id, onData) {
   listeners.get(id).add(onData)
   setTimeout(() => onData(read(id)), 0)
   return () => listeners.get(id)?.delete(onData)
+}
+
+function readAll() {
+  const trips = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k?.startsWith('trip:')) {
+      const trip = read(k.slice(5))
+      if (trip) trips.push({ id: k.slice(5), ...trip })
+    }
+  }
+  return trips.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+}
+
+const listListeners = new Set()
+
+export function subscribeTrips(onData) {
+  listListeners.add(onData)
+  setTimeout(() => onData(readAll()), 0)
+  return () => listListeners.delete(onData)
 }
 
 export async function createTrip(id, data) {

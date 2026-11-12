@@ -1,6 +1,6 @@
 # 沖繩家族旅行 — shared trip planner
 
-A tiny web app where everyone with the link can edit the itinerary together.
+A tiny web app where everyone with the site link can see and edit every itinerary together.
 No accounts. Drag activities between days, drag whole days to swap them.
 UI is in Traditional Chinese.
 
@@ -30,15 +30,14 @@ Open http://localhost:5173 and click **建立沖繩行程**. Without Firebase co
    npx firebase-tools use --add     # pick your project
    npm run deploy                   # builds, uploads the site + database rules
    ```
-6. Open `https://<your-project>.web.app`, click **建立沖繩行程**, then **分享連結** and
-   send the link to the family group chat.
+6. Open `https://<your-project>.web.app`, click **建立沖繩行程**, then send the site link to the
+   family group chat. Everyone sees all trips on the home page.
 
-## How the "secret link" works
+## Who can see what
 
-Each trip is one Firestore document at `trips/{tripId}`, where `tripId` is a random 22-character
-string (~130 bits). `firestore.rules` lets anyone read/write a trip **only if they know its exact
-ID**, and blocks listing or deleting trips. So: anyone with the link can edit, nobody else can find it.
-Only share it with people on the trip.
+Each trip is one Firestore document at `trips/{tripId}`. The home page lists **every trip**, so anyone
+who opens the site can see and edit all of them (`firestore.rules` allows reading and listing trips,
+and blocks deleting them). Only share the site address with people on the trip.
 
 ## Notes
 

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { doc, getFirestore, onSnapshot, runTransaction, setDoc } from 'firebase/firestore'
+import { collection, doc, getFirestore, onSnapshot, orderBy, query, runTransaction, setDoc } from 'firebase/firestore'
 
 let db
 function getDb() {
@@ -21,6 +21,15 @@ export function subscribeTrip(id, onData, onError) {
   return onSnapshot(
     tripRef(id),
     (snap) => onData(snap.exists() ? snap.data() : null),
+    onError,
+  )
+}
+
+// Every trip, most recently edited first. The list is public: anyone who opens the site sees it.
+export function subscribeTrips(onData, onError) {
+  return onSnapshot(
+    query(collection(getDb(), 'trips'), orderBy('updatedAt', 'desc')),
+    (snap) => onData(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
     onError,
   )
 }

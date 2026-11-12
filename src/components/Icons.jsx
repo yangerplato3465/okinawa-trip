@@ -34,3 +34,4 @@ export const FoodIcon = () => (
   <Svg><path d="M4 3v7a3 3 0 0 0 3 3v8M10 3v7a3 3 0 0 1-3 3M7 3v5M17 21V3c-2 1.5-3 4-3 7v4h3" /></Svg>
 )
 export const ChevronIcon = () => <Svg size={16}><path d="m9 6 6 6-6 6" /></Svg>
+export const BackIcon = () => <Svg size={16}><path d="m15 6-6 6 6 6" /></Svg>
